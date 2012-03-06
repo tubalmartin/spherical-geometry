@@ -1,6 +1,15 @@
 <?php
 
-// Google MAPS API port
+/*!
+ * Spherical Geometry PHP Library v1.0
+ * Todo: http://
+ *
+ * Copyright 2012, Túbal Martín
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * This code is a port of the Google Maps Javascript API v3.5
+ */
+ 
 
 /** 
  * Static class Geometry
