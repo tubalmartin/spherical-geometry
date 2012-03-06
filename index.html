@@ -3,25 +3,57 @@
 <head>
   <meta charset='utf-8'>
 
-  <title>tubalmartin/spherical-geometry-php @ GitHub</title>
+  <title>Spherical Geometry Library in PHP @ GitHub</title>
 
   <style type="text/css">
     body {
-      margin-top: 1.0em;
-      background-color: #2daf57;
+      margin-top: 12px;
+      background-color: #fdfdfd;
       font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
+      font-size:14px;
+      color: #222;
     }
     #container {
       margin: 0 auto;
-      width: 700px;
+      width: 800px;
     }
-    h1 { font-size: 3.8em; color: #d250a8; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
+    h1 { font-size: 30px; color: #222; margin-bottom: 3px; }
+    h1 .small { font-size: 16px; }
     h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #d250a8; }
-    h3 { text-align: center; color: #d250a8; }
-    a { color: #d250a8; }
+    h2 { font-size: 20px; color: #222; }
+    h3 {font-size:17px; 
+        border-top: 1px solid #36C;
+        background-color: #E5ECF9;
+        padding: 3px 10px; 
+    }
+    a { color: blue; }
+    table {
+        margin: 1em 0 0 1px;
+        border: 1px solid;
+        border-spacing: 0;
+        border-collapse: collapse;
+        border-color: #BBB;
+        font-size:13px;
+    }
+    th, td {vertical-align: top;}
+    th { 
+        font-weight: bold;
+        text-align: left;
+        padding: 6px 12px;
+        border: 1px solid #BBB;
+        background-color: #E5ECF9;
+    }
+    td {
+        padding: 6px 12px;
+        border: 1px solid #BBB;
+        background-color: white;
+        text-align: left;
+        vertical-align: top;
+    }
+    table code, table pre {
+        font-family: monospace;
+        color: #007000;
+    }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
     pre { background: #000; color: #fff; padding: 15px;}
@@ -42,36 +74,240 @@
         <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
     </div>
 
-    <h1><a href="https://github.com/tubalmartin/spherical-geometry-php">spherical-geometry-php</a>
-      <span class="small">by <a href="https://github.com/tubalmartin">tubalmartin</a></span></h1>
+    <h1><a href="https://github.com/tubalmartin/spherical-geometry-php">Spherical Geometry Library in PHP</a>
+      <span class="small">by <a href="https://github.com/tubalmartin">Túbal Martín</a></span></h1>
 
     <div class="description">
-      A handy library written in PHP with code ported from Google Maps Javascript API
+      <p>The geometry library provides utility functions for the computation of geometric data on the surface of the Earth.</p>
+      <p>The code is ported from Google Maps Javascript API version 3. This library ports a small but useful subset of classes from the Google Maps Javascript API.</p>
     </div>
 
-    
-
-    
-
-    
-      <h2>Install</h2>
-      <p>Include the spherical-geometry.class.php file in your code and enjoy!</p>
-    
-
+      <h2>How to use</h2>
+      <p>Include the <code>spherical-geometry.class.php</code> file in your code and use the API!</p>
+      
+      <h2>API</h2>
+      <p>Classes and libraries ported from the Google Maps Javascript API:</p>
+      <ul>
+        <li><a href="http://code.google.com/intl/en/apis/maps/documentation/javascript/geometry.html">Geometry Library - google.maps.geometry.spherical static methods</a></li>
+        <li><a href="http://code.google.com/intl/en/apis/maps/documentation/javascript/reference.html#LatLng">Base - google.maps.LatLng class</a></li>
+        <li><a href="http://code.google.com/intl/en/apis/maps/documentation/javascript/reference.html#LatLngBounds">Base - google.maps.LatLngBounds class</a></li>
+      </ul>
+        
+        <h3>
+        <a name="spherical"></a>
+        Spherical geometry static class
+        </h3>
+        <p>Utility functions for computing geodesic angles, distances and areas. The default radius is Earth's radius of 6378137 meters.</p>
+        <h4>Extends</h4>
+        <p>Geometry class (empty class created only if it doesn't already exist)</p>
+        <h4>Static Methods</h4>
+        <table summary="namespace spherical - Static Methods" width="100%">
+        <thead>
+        <th>Methods</th>
+        <th>Return Value</th>
+        <th>Description</th>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code>getEarthRadius()</code></td>
+        <td><code>number</code></td>
+        <td>Gets the Earth's radius set.</td>
+        </tr>
+        <tr>
+        <td><code>setEarthRadius(radius:number)</code></td>
+        <td></td>
+        <td>Sets the Earth's radius. You can change the unit of length of the radius i.e. If you set the radius in Kilometers <code>setEarthRadius(6378.137)</code>, all results returned will be in Km.</td>
+        </tr>
+        <tr>
+        <td><code>computeArea(loop:Array.&lt;<a href="#LatLng">LatLng</a>&gt;)</code></td>
+        <td><code>number</code></td>
+        <td>Computes the area of the given loop. Loops must be closed.</td>
+        </tr>
+        <tr>
+        <td><code>computeDistanceBetween(from:<a href="#LatLng">LatLng</a>, to:<a href="#LatLng">LatLng</a>)</code></td>
+        <td><code>number</code></td>
+        <td>Computes the distance between two LatLngs.</td>
+        </tr>
+        <tr>
+        <td><code>computeHeading(from:<a href="#LatLng">LatLng</a>, to:<a href="#LatLng">LatLng</a>)</code></td>
+        <td><code>number</code></td>
+        <td>Computes the heading from one LatLng to another LatLng.</td>
+        </tr>
+        <tr>
+        <td><code>computeLength(path:Array.&lt;<a href="#LatLng">LatLng</a>&gt;)</code></td>
+        <td><code>number</code></td>
+        <td>Computes the length of the given path.</td>
+        </tr>
+        <tr>
+        <td><code>computeOffset(from:<a href="#LatLng">LatLng</a>, distance:number, heading:number)</code></td>
+        <td><code><a href="#LatLng">LatLng</a></code></td>
+        <td>Computes the LatLng produced by starting from a given LatLng and heading a given distance.</td>
+        </tr>
+        <tr>
+        <td><code>computeSignedArea(loop:Array.&lt;<a href="#LatLng">LatLng</a>&gt;)</code></td>
+        <td><code>number</code></td>
+        <td>Computes the signed area of the given loop. Loops must be closed. The signed area may be used to determine the orientation of a loop.</td>
+        </tr>
+        <tr>
+        <td><code>interpolate(from:<a href="#LatLng">LatLng</a>, to:<a href="#LatLng">LatLng</a>, fraction:number)</code></td>
+        <td><code><a href="#LatLng">LatLng</a></code></td>
+        <td>Travels a fraction of the way from one LatLng to another LatLng.</td>
+        </tr>
+        </tbody>
+        </table>
+        
+        
+        
+        <h3>LatLng class <a name="LatLng"></a></h3>
+        <p><code><a href="#LatLng">LatLng</a></code> is a point in geographical coordinates, latitude and longitude.</p> <p>Notice that although usual map projections associate longitude with the x-coordinate of the map, and latitude with the y-coordinate, the latitude coordinate is always written <em>first</em>, followed by the longitude.</p> <p>Notice also that you cannot modify the coordinates of a <code><a href="#LatLng">LatLng</a></code>. If you want to compute another point, you have to create a new one.</p>
+        <h4>Constructor</h4>
+        <table summary="class LatLng - Constructor" width="100%">
+        <thead>
+        <th>Constructor</th>
+        <th>Description</th>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code>LatLng(lat:number, lng:number, noWrap?:boolean)</code></td>
+        <td>Notice the ordering of latitude and longitude. If the noWrap flag is true, then the numbers will be used as passed, otherwise latitude will be clamped to lie between -90 degrees and +90 degrees, and longitude will be wrapped to lie between -180 degrees and +180 degrees.</td>
+        </tr>
+        </tbody>
+        </table>
+        <h4>Methods</h4>
+        <table summary="class LatLng - Methods" width="100%">
+        <thead>
+        <th>Methods</th>
+        <th>Return Value</th>
+        <th>Description</th>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code>equals(other:<a href="#LatLng">LatLng</a>)</code></td>
+        <td><code>boolean</code></td>
+        <td>Comparison function.</td>
+        </tr>
+        <tr>
+        <td><code>lat()</code></td>
+        <td><code>number</code></td>
+        <td>Returns the latitude in degrees.</td>
+        </tr>
+        <tr>
+        <td><code>lng()</code></td>
+        <td><code>number</code></td>
+        <td>Returns the longitude in degrees.</td>
+        </tr>
+        <tr>
+        <td><code>toString()</code></td>
+        <td><code>string</code></td>
+        <td>Converts to string representation.</td>
+        </tr>
+        <tr>
+        <td><code>toUrlValue(precision?:number)</code></td>
+        <td><code>string</code></td>
+        <td>Returns a string of the form "lat,lng" for this LatLng. We round the lat/lng values to 6 decimal places by default.</td>
+        </tr>
+        </tbody>
+        </table>
+        
+        
+        <h3>
+        <a name="LatLngBounds"></a>
+        LatLngBounds class
+        </h3>
+        <p>A <code><a href="#LatLngBounds">LatLngBounds</a></code> instance represents a rectangle in geographical coordinates, including one that crosses the 180 degrees longitudinal meridian.</p>
+        <h4>Constructor</h4>
+        <table summary="class LatLngBounds - Constructor" width="100%">
+        <thead>
+        <th>Constructor</th>
+        <th>Description</th>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code>LatLngBounds(sw?:<a href="#LatLng">LatLng</a>, ne?:<a href="#LatLng">LatLng</a>)</code></td>
+        <td>Constructs a rectangle from the points at its south-west and north-east corners.</td>
+        </tr>
+        </tbody>
+        </table>
+        <h4>Methods</h4>
+        <table summary="class LatLngBounds - Methods" width="100%">
+        <thead>
+        <th>Methods</th>
+        <th>Return Value</th>
+        <th>Description</th>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code>contains(latLng:<a href="#LatLng">LatLng</a>)</code></td>
+        <td><code>boolean</code></td>
+        <td>Returns true if the given lat/lng is in this bounds.</td>
+        </tr>
+        <tr>
+        <td><code>equals(other:<a href="#LatLngBounds">LatLngBounds</a>)</code></td>
+        <td><code>boolean</code></td>
+        <td>Returns true if this bounds approximately equals the given bounds.</td>
+        </tr>
+        <tr>
+        <td><code>extend(point:<a href="#LatLng">LatLng</a>)</code></td>
+        <td><code><a href="#LatLngBounds">LatLngBounds</a></code></td>
+        <td>Extends this bounds to contain the given point.</td>
+        </tr>
+        <tr>
+        <td><code>getCenter()</code></td>
+        <td><code><a href="#LatLng">LatLng</a></code></td>
+        <td>Computes the center of this LatLngBounds</td>
+        </tr>
+        <tr>
+        <td><code>getNorthEast()</code></td>
+        <td><code><a href="#LatLng">LatLng</a></code></td>
+        <td>Returns the north-east corner of this bounds.</td>
+        </tr>
+        <tr>
+        <td><code>getSouthWest()</code></td>
+        <td><code><a href="#LatLng">LatLng</a></code></td>
+        <td>Returns the south-west corner of this bounds.</td>
+        </tr>
+        <tr>
+        <td><code>intersects(other:<a href="#LatLngBounds">LatLngBounds</a>)</code></td>
+        <td><code>boolean</code></td>
+        <td>Returns true if this bounds shares any points with this bounds.</td>
+        </tr>
+        <tr>
+        <td><code>isEmpty()</code></td>
+        <td><code>boolean</code></td>
+        <td>Returns if the bounds are empty.</td>
+        </tr>
+        <tr>
+        <td><code>toSpan()</code></td>
+        <td><code><a href="#LatLng">LatLng</a></code></td>
+        <td>Converts the given map bounds to a lat/lng span.</td>
+        </tr>
+        <tr>
+        <td><code>toString()</code></td>
+        <td><code>string</code></td>
+        <td>Converts to string.</td>
+        </tr>
+        <tr>
+        <td><code>toUrlValue(precision?:number)</code></td>
+        <td><code>string</code></td>
+        <td>Returns a string of the form "lat_lo,lng_lo,lat_hi,lng_hi" for this bounds, where "lo" corresponds to the southwest corner of the bounding box, while "hi" corresponds to the northeast corner of that box.</td>
+        </tr>
+        <tr>
+        <td><code>union(other:<a href="#LatLngBounds">LatLngBounds</a>)</code></td>
+        <td><code><a href="#LatLngBounds">LatLngBounds</a></code></td>
+        <td>Extends this bounds to contain the union of this and the given bounds.</td>
+        </tr>
+        </tbody>
+        </table>
+      
+      <h2>Tests</h2>
+      <p>You can view the tests located in the <a href="https://github.com/tubalmartin/spherical-geometry-php/tree/master/tests">tests folder</a>.</p>
+      <p>To run the tests, download the project and upload it to a server with PHP. Open your browser and enter the absolute URL to the <code>tests</code> folder.</p>
     
       <h2>License</h2>
       <p>Dual licensed under the MIT or GPL Version 2 licenses.</p>
     
-
-    
       <h2>Authors</h2>
-      <p>Túbal Martín </p>
-    
-
-    
-      <h2>Contact</h2>
-      <p>Túbal Martín (tubalmartin@gmail.com)<br/>      </p>
-    
+      <p>Túbal Martín (tubalmartin at gmail dot com)</p>
 
     <h2>Download</h2>
     <p>
@@ -83,7 +319,7 @@
       by running:
       <pre>$ git clone git://github.com/tubalmartin/spherical-geometry-php</pre>
     </p>
-
+    
     <div class="footer">
       get the source code on GitHub : <a href="https://github.com/tubalmartin/spherical-geometry-php">tubalmartin/spherical-geometry-php</a>
     </div>
