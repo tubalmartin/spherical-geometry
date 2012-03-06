@@ -8,7 +8,7 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  * This code is a port of some classes from the Google Maps Javascript API version 3
- * Code updated to version 3.8 of the API.
+ * Code updated to version 3.5 of the API.
  */
  
 
