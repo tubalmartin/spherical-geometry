@@ -2,12 +2,13 @@
 
 /*!
  * Spherical Geometry PHP Library v1.0
- * Todo: http://
+ * http://tubalmartin.github.com/spherical-geometry-php/
  *
  * Copyright 2012, Túbal Martín
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * This code is a port of the Google Maps Javascript API v3.5
+ * This code is a port of some classes from the Google Maps Javascript API version 3
+ * Code updated to version 3.8 of the API.
  */
  
 
