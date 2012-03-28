@@ -84,7 +84,11 @@
 
       <h2>How to use</h2>
       <p>Include the <code>spherical-geometry.class.php</code> file in your code and use the API!</p>
-      <p>Note: The API is nearly identical to the Google Maps Javascript API.</p>
+      <p>Notes: </p>
+      <ul>
+        <li>The API is nearly identical to the Google Maps Javascript API.</li>
+        <li>All computed lengths are returned in meters.</li>
+      </ul>
       
       <h2>API</h2>
       <p>Classes and libraries ported from the Google Maps Javascript API:</p>
@@ -96,12 +100,10 @@
         
         <h3>
         <a name="spherical"></a>
-        Spherical class (static)
+        SphericalGeometry class (static)
         </h3>
         <p>Utility functions for computing geodesic angles, distances and areas. The default radius is Earth's radius of 6378137 meters.</p>
         <p>If you don't know how to use some of these methods read this excellent article by Gabriel Svennerberg: <a href="http://www.svennerberg.com/2011/04/calculating-distances-and-areas-in-google-maps-api-3/">Calculating Distances and Areas in Google Maps API 3</a></p>
-        <h4>Extends</h4>
-        <p><code>Geometry</code> class (empty class created only if it doesn't already exist)</p>
         <h4>Static Methods</h4>
         <table summary="namespace spherical - Static Methods" width="100%">
         <thead>
@@ -113,17 +115,17 @@
         <tr>
         <td><code>getEarthRadius()</code></td>
         <td><code>number</code></td>
-        <td>Gets the Earth's radius set.</td>
-        </tr>
-        <tr>
-        <td><code>setEarthRadius(radius:number)</code></td>
-        <td></td>
-        <td>Sets the Earth's radius. You can change the unit of length of the radius i.e. If you set the radius in Kilometers <code>setEarthRadius(6378.137)</code>, all results returned will be in Km.</td>
+        <td>Gets the Earth's radius.</td>
         </tr>
         <tr>
         <td><code>computeArea(loop:Array.&lt;<a href="#LatLng">LatLng</a>&gt;)</code></td>
         <td><code>number</code></td>
         <td>Computes the area of the given loop. Loops must be closed.</td>
+        </tr>
+        <tr>
+        <td><code>computeBounds(center:<a href="#LatLng">LatLng</a>, radius:number)</code></td>
+        <td><code><a href="#LatLngBounds">LatLngBounds</a></code></td>
+        <td>Computes a bounding rectangle from a LatLng point and a given radius (radius must be given in meters). See <a href="http://www.movable-type.co.uk/scripts/latlong-db.html">this page</a> for more info.</td>
         </tr>
         <tr>
         <td><code>computeDistanceBetween(from:<a href="#LatLng">LatLng</a>, to:<a href="#LatLng">LatLng</a>)</code></td>
@@ -162,8 +164,6 @@
         
         <h3>LatLng class <a name="LatLng"></a></h3>
         <p><code><a href="#LatLng">LatLng</a></code> is a point in geographical coordinates, latitude and longitude.</p> <p>Notice that although usual map projections associate longitude with the x-coordinate of the map, and latitude with the y-coordinate, the latitude coordinate is always written <em>first</em>, followed by the longitude.</p> <p>Notice also that you cannot modify the coordinates of a <code><a href="#LatLng">LatLng</a></code>. If you want to compute another point, you have to create a new one.</p>
-        <h4>Extends</h4>
-        <p><code>Spherical</code> class</p>
         <h4>Constructor</h4>
         <table summary="class LatLng - Constructor" width="100%">
         <thead>
@@ -219,8 +219,6 @@
         LatLngBounds class
         </h3>
         <p>A <code><a href="#LatLngBounds">LatLngBounds</a></code> instance represents a rectangle in geographical coordinates, including one that crosses the 180 degrees longitudinal meridian.</p>
-        <h4>Extends</h4>
-        <p><code>Spherical</code> class</p>
         <h4>Constructor</h4>
         <table summary="class LatLngBounds - Constructor" width="100%">
         <thead>
