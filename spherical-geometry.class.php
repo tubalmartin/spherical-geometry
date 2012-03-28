@@ -47,7 +47,7 @@ class SphericalGeometry
      */
     public static function computeBounds($LatLng, $radius)
     {
-        $latRadiansDistance = $radius / self::EARTH_RADIUS
+        $latRadiansDistance = $radius / self::EARTH_RADIUS;
         $latDegreesDistance = rad2deg($latRadiansDistance);
         $lngDegreesDistance = rad2deg($latRadiansDistance / cos(deg2rad($LatLng->getLat())));
     
@@ -76,7 +76,7 @@ class SphericalGeometry
     
     public static function computeOffset($fromLatLng, $distance, $heading) 
     {
-        $distance /= self::EARTH_RADIUS
+        $distance /= self::EARTH_RADIUS;
         $heading = deg2rad($heading);
         $fromLat = deg2rad($fromLatLng->getLat());
         $cosDistance = cos($distance);
@@ -121,7 +121,7 @@ class SphericalGeometry
 
     public static function computeDistanceBetween($LatLng1, $LatLng2)
     {
-        return self::_computeDistanceInRadiansBetween($LatLng1, $LatLng2) * self::EARTH_RADIUS
+        return self::_computeDistanceInRadiansBetween($LatLng1, $LatLng2) * self::EARTH_RADIUS;
     }
     
     public static function computeLength($LatLngsArray) 
