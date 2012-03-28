@@ -22,12 +22,12 @@ class SphericalGeometry
     const EQUALS_MARGIN_ERROR = 1.0E-9;
     
     // Earth's radius (at the Ecuator) of 6378137 meters.
-    private static $earthRadius = 6378137; 
+    const EARTH_RADIUS = 6378137; 
         
     
     public static function getEarthRadius()
     {
-        return self::$earthRadius;
+        return self::EARTH_RADIUS;
     }
     
     /**
@@ -47,7 +47,7 @@ class SphericalGeometry
      */
     public static function computeBounds($LatLng, $radius)
     {
-        $latRadiansDistance = $radius / self::$earthRadius;
+        $latRadiansDistance = $radius / self::EARTH_RADIUS
         $latDegreesDistance = rad2deg($latRadiansDistance);
         $lngDegreesDistance = rad2deg($latRadiansDistance / cos(deg2rad($LatLng->getLat())));
     
@@ -76,7 +76,7 @@ class SphericalGeometry
     
     public static function computeOffset($fromLatLng, $distance, $heading) 
     {
-        $distance /= self::$earthRadius;
+        $distance /= self::EARTH_RADIUS
         $heading = deg2rad($heading);
         $fromLat = deg2rad($fromLatLng->getLat());
         $cosDistance = cos($distance);
@@ -121,7 +121,7 @@ class SphericalGeometry
 
     public static function computeDistanceBetween($LatLng1, $LatLng2)
     {
-        return self::_computeDistanceInRadiansBetween($LatLng1, $LatLng2) * self::$earthRadius;
+        return self::_computeDistanceInRadiansBetween($LatLng1, $LatLng2) * self::EARTH_RADIUS
     }
     
     public static function computeLength($LatLngsArray) 
@@ -146,7 +146,7 @@ class SphericalGeometry
         if (empty($LatLngsArray) || count($LatLngsArray) < 3) return 0;
         
         $e = 0;
-        $r2 = pow(self::$earthRadius, 2);
+        $r2 = pow(self::EARTH_RADIUS, 2);
         
         for ($i = 1, $l = count($LatLngsArray) - 1; $i < $l; ++$i) 
         {
@@ -313,131 +313,131 @@ class LatLngBounds
      * $LatLngNe North East LatLng object
      */
     public function __construct($LatLngSw = null, $LatLngNe = null) 
-    {	
-		if ((!is_null($LatLngSw) && !($LatLngSw instanceof LatLng))
-		    || (!is_null($LatLngNe) && !($LatLngNe instanceof LatLng)))
+    {   
+        if ((!is_null($LatLngSw) && !($LatLngSw instanceof LatLng))
+            || (!is_null($LatLngNe) && !($LatLngNe instanceof LatLng)))
         {
             trigger_error('LatLngBounds class -> Invalid LatLng object.', E_USER_ERROR);
         }
-		
-		if ($LatLngSw && !$LatLngNe) 
-		{
-			$LatLngNe = $LatLngSw;
-		}
-		
-		if ($LatLngSw)
-		{
-		    $sw = SphericalGeometry::clampLatitude($LatLngSw->getLat());
-		    $ne = SphericalGeometry::clampLatitude($LatLngNe->getLat());
-		    $this->_LatBounds = new LatBounds($sw, $ne);
-		    
-		    $sw = $LatLngSw->getLng();
-		    $ne = $LatLngNe->getLng();
-		    
-		    if ($ne - $sw >= 360) 
-		    {
-		        $this->_LngBounds = new LngBounds(-180, 180);
-		    }
-		    else 
-		    {
-		        $sw = SphericalGeometry::wrapLongitude($LatLngSw->getLng());
-		        $ne = SphericalGeometry::wrapLongitude($LatLngNe->getLng());
-		        $this->_LngBounds = new LngBounds($sw, $ne);
-		    }
-		} 
-		else 
-		{
-		    $this->_LatBounds = new LatBounds(1, -1);
-		    $this->_LngBounds = new LngBounds(180, -180);
-		}
-	}
-	
-	public function getLatBounds()
-	{
-	    return $this->_LatBounds;
-	}
-	
-	public function getLngBounds()
-	{
-	    return $this->_LngBounds;
-	}
-	
-	public function getCenter()
-	{
-	    return new LatLng($this->_LatBounds->getMidpoint(), $this->_LngBounds->getMidpoint());
-	}
-	
-	public function isEmpty()
-	{
-	    return $this->_LatBounds->isEmpty() || $this->_LngBounds->isEmpty();
-	}
-	
-	public function getSouthWest()
-	{
-	    return new LatLng($this->_LatBounds->getSw(), $this->_LngBounds->getSw(), true);
-	}
-	
-	public function getNorthEast()
-	{
-	    return new LatLng($this->_LatBounds->getNe(), $this->_LngBounds->getNe(), true);
-	}
-	
-	public function toSpan()
-	{
-	    $lat = $this->_LatBounds->isEmpty() ? 0 : $this->_LatBounds->getNe() - $this->_LatBounds->getSw();
-	    $lng = $this->_LngBounds->isEmpty() 
-	        ? 0 
-	        : ($this->_LngBounds->getSw() > $this->_LngBounds->getNe() 
+        
+        if ($LatLngSw && !$LatLngNe) 
+        {
+            $LatLngNe = $LatLngSw;
+        }
+        
+        if ($LatLngSw)
+        {
+            $sw = SphericalGeometry::clampLatitude($LatLngSw->getLat());
+            $ne = SphericalGeometry::clampLatitude($LatLngNe->getLat());
+            $this->_LatBounds = new LatBounds($sw, $ne);
+            
+            $sw = $LatLngSw->getLng();
+            $ne = $LatLngNe->getLng();
+            
+            if ($ne - $sw >= 360) 
+            {
+                $this->_LngBounds = new LngBounds(-180, 180);
+            }
+            else 
+            {
+                $sw = SphericalGeometry::wrapLongitude($LatLngSw->getLng());
+                $ne = SphericalGeometry::wrapLongitude($LatLngNe->getLng());
+                $this->_LngBounds = new LngBounds($sw, $ne);
+            }
+        } 
+        else 
+        {
+            $this->_LatBounds = new LatBounds(1, -1);
+            $this->_LngBounds = new LngBounds(180, -180);
+        }
+    }
+    
+    public function getLatBounds()
+    {
+        return $this->_LatBounds;
+    }
+    
+    public function getLngBounds()
+    {
+        return $this->_LngBounds;
+    }
+    
+    public function getCenter()
+    {
+        return new LatLng($this->_LatBounds->getMidpoint(), $this->_LngBounds->getMidpoint());
+    }
+    
+    public function isEmpty()
+    {
+        return $this->_LatBounds->isEmpty() || $this->_LngBounds->isEmpty();
+    }
+    
+    public function getSouthWest()
+    {
+        return new LatLng($this->_LatBounds->getSw(), $this->_LngBounds->getSw(), true);
+    }
+    
+    public function getNorthEast()
+    {
+        return new LatLng($this->_LatBounds->getNe(), $this->_LngBounds->getNe(), true);
+    }
+    
+    public function toSpan()
+    {
+        $lat = $this->_LatBounds->isEmpty() ? 0 : $this->_LatBounds->getNe() - $this->_LatBounds->getSw();
+        $lng = $this->_LngBounds->isEmpty() 
+            ? 0 
+            : ($this->_LngBounds->getSw() > $this->_LngBounds->getNe() 
                 ? 360 - ($this->_LngBounds->getSw() - $this->_LngBounds->getNe())
                 : $this->_LngBounds->getNe() - $this->_LngBounds->getSw());
-	    
-	    return new LatLng($lat, $lng, true);
-	}
-	
-	public function toString()
-	{
-	    return '('. $this->getSouthWest()->toString() .', '. $this->getNorthEast()->toString() .')';
-	}
-	
-	public function toUrlValue($precision = 6)
-	{
-	    return $this->getSouthWest()->toUrlValue($precision) .','. 
-	        $this->getNorthEast()->toUrlValue($precision);
-	}
-	
-	public function equals($LatLngBounds)
-	{
-	    return !$LatLngBounds 
-	        ? false 
-	        : $this->_LatBounds->equals($LatLngBounds->getLatBounds()) 
-	            && $this->_LngBounds->equals($LatLngBounds->getLngBounds());
-	}
-	
-	public function intersects($LatLngBounds)
-	{
-	    return $this->_LatBounds->intersects($LatLngBounds->getLatBounds()) 
-	        && $this->_LngBounds->intersects($LatLngBounds->getLngBounds());
-	}
-	
-	public function union($LatLngBounds)
-	{
-	    $this->extend($LatLngBounds->getSouthWest());
-	    $this->extend($LatLngBounds->getNorthEast());
+        
+        return new LatLng($lat, $lng, true);
+    }
+    
+    public function toString()
+    {
+        return '('. $this->getSouthWest()->toString() .', '. $this->getNorthEast()->toString() .')';
+    }
+    
+    public function toUrlValue($precision = 6)
+    {
+        return $this->getSouthWest()->toUrlValue($precision) .','. 
+            $this->getNorthEast()->toUrlValue($precision);
+    }
+    
+    public function equals($LatLngBounds)
+    {
+        return !$LatLngBounds 
+            ? false 
+            : $this->_LatBounds->equals($LatLngBounds->getLatBounds()) 
+                && $this->_LngBounds->equals($LatLngBounds->getLngBounds());
+    }
+    
+    public function intersects($LatLngBounds)
+    {
+        return $this->_LatBounds->intersects($LatLngBounds->getLatBounds()) 
+            && $this->_LngBounds->intersects($LatLngBounds->getLngBounds());
+    }
+    
+    public function union($LatLngBounds)
+    {
+        $this->extend($LatLngBounds->getSouthWest());
+        $this->extend($LatLngBounds->getNorthEast());
         return $this;
-	}
-	
-	public function contains($LatLng)
-	{
-	    return $this->_LatBounds->contains($LatLng->getLat()) 
-	        && $this->_LngBounds->contains($LatLng->getLng());
-	}
-	
-	public function extend($LatLng)
-	{
-	    $this->_LatBounds->extend($LatLng->getLat());
+    }
+    
+    public function contains($LatLng)
+    {
+        return $this->_LatBounds->contains($LatLng->getLat()) 
+            && $this->_LngBounds->contains($LatLng->getLng());
+    }
+    
+    public function extend($LatLng)
+    {
+        $this->_LatBounds->extend($LatLng->getLat());
         $this->_LngBounds->extend($LatLng->getLng());
         return $this;    
-	}
+    }
 }
 
 
