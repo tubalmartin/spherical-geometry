@@ -5,7 +5,7 @@ h3('Constructor');
 // Create LatLng objects
 foreach ($places as $name => $coords) {
     $$name = new LatLng($coords['lat'], $coords['lng']);
-    p($name .' => lat: '. $$name->lat() .', lng: '. $$name->lng());
+    p($name .' => lat: '. $$name->getLat() .', lng: '. $$name->getLng());
 }
 
 h3('toString()');

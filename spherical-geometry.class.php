@@ -52,9 +52,9 @@ class Spherical extends Geometry
     
     public static function computeHeading($fromLatLng, $toLatLng)
     {
-        $fromLat = deg2rad($fromLatLng->lat());
-        $toLat = deg2rad($toLatLng->lat());
-        $lng = deg2rad($toLatLng->lng()) - deg2rad($fromLatLng->lng());
+        $fromLat = deg2rad($fromLatLng->getLat());
+        $toLat = deg2rad($toLatLng->getLat());
+        $lng = deg2rad($toLatLng->getLng()) - deg2rad($fromLatLng->getLng());
         
         return self::_wrapLongitude(rad2deg(atan2(sin($lng) * cos($toLat), cos($fromLat) * sin($toLat) - sin($fromLat) * cos($toLat) * cos($lng))));
     }
@@ -63,7 +63,7 @@ class Spherical extends Geometry
     {
         $distance /= self::$earthRadius;
         $heading = deg2rad($heading);
-        $fromLat = deg2rad($fromLatLng->lat());
+        $fromLat = deg2rad($fromLatLng->getLat());
         $cosDistance = cos($distance);
         $sinDistance = sin($distance);
         $sinFromLat = sin($fromLat);
@@ -71,17 +71,17 @@ class Spherical extends Geometry
         $sc = $cosDistance * $sinFromLat + $sinDistance * $cosFromLat * cos($heading);
         
         $lat = rad2deg(asin($sc));
-        $lng = rad2deg(deg2rad($fromLatLng->lng()) + atan2($sinDistance * $cosFromLat * sin($heading), $cosDistance - $sinFromLat * $sc));
+        $lng = rad2deg(deg2rad($fromLatLng->getLng()) + atan2($sinDistance * $cosFromLat * sin($heading), $cosDistance - $sinFromLat * $sc));
         
         return new LatLng($lat, $lng);
     }
     
     public static function interpolate($fromLatLng, $toLatLng, $fraction)
     {
-        $radFromLat = deg2rad($fromLatLng->lat());
-        $radFromLng = deg2rad($fromLatLng->lng());
-        $radToLat = deg2rad($toLatLng->lat());
-        $radToLng = deg2rad($toLatLng->lng());
+        $radFromLat = deg2rad($fromLatLng->getLat());
+        $radFromLng = deg2rad($fromLatLng->getLng());
+        $radToLat = deg2rad($toLatLng->getLat());
+        $radToLng = deg2rad($toLatLng->getLng());
         $cosFromLat = cos($radFromLat);
         $cosToLat = cos($radToLat);
         $radDist = self::_computeDistanceInRadiansBetween($fromLatLng, $toLatLng);
@@ -89,7 +89,7 @@ class Spherical extends Geometry
         
         if ($sinRadDist < 1.0E-6)
         {
-            return new LatLng($fromLatLng->lat(), $fromLatLng->lng());
+            return new LatLng($fromLatLng->getLat(), $fromLatLng->getLng());
         }
         
         $a = sin((1 - $fraction) * $radDist) / $sinRadDist;
@@ -158,10 +158,10 @@ class Spherical extends Geometry
      */
     protected static function _computeDistanceInRadiansBetween($LatLng1, $LatLng2)
     {
-        $p1RadLat = deg2rad($LatLng1->lat());
-        $p1RadLng = deg2rad($LatLng1->lng());
-        $p2RadLat = deg2rad($LatLng2->lat());
-        $p2RadLng = deg2rad($LatLng2->lng());
+        $p1RadLat = deg2rad($LatLng1->getLat());
+        $p1RadLng = deg2rad($LatLng1->getLng());
+        $p2RadLat = deg2rad($LatLng2->getLat());
+        $p2RadLng = deg2rad($LatLng2->getLng());
         return 2 * asin(sqrt(pow(sin(($p1RadLat - $p2RadLat) / 2), 2) + cos($p1RadLat) * cos($p2RadLat) * pow(sin(($p1RadLng - $p2RadLng) / 2), 2)));
     }
     
@@ -204,8 +204,8 @@ class Spherical extends Geometry
         for ($i = 0; $i < 3; ++$i) 
         { 
             $LatLng = $latLngsArray[$i];
-            $lat = deg2rad($LatLng->lat());
-            $lng = deg2rad($LatLng->lng());
+            $lat = deg2rad($LatLng->getLat());
+            $lng = deg2rad($LatLng->getLng());
             
             $v[$i] = array();
             $v[$i][0] = cos($lat) * cos($lng);
@@ -251,12 +251,12 @@ class LatLng extends Spherical
         $this->_lng = $lng;
     }
     
-    public function lat()
+    public function getLat()
     {
         return $this->_lat;
     }
     
-    public function lng()
+    public function getLng()
     {
         return $this->_lng;
     }
@@ -268,8 +268,8 @@ class LatLng extends Spherical
             return false;
         }
         
-        return abs($this->_lat - $LatLng->lat()) <= parent::EQUALS_MARGIN_ERROR 
-            && abs($this->_lng - $LatLng->lng()) <= parent::EQUALS_MARGIN_ERROR;             
+        return abs($this->_lat - $LatLng->getLat()) <= parent::EQUALS_MARGIN_ERROR 
+            && abs($this->_lng - $LatLng->getLng()) <= parent::EQUALS_MARGIN_ERROR;             
     }
     
     public function toString()
@@ -310,12 +310,12 @@ class LatLngBounds extends Spherical
 		
 		if ($LatLngSw)
 		{
-		    $sw = parent::_clampLatitude($LatLngSw->lat());
-		    $ne = parent::_clampLatitude($LatLngNe->lat());
+		    $sw = parent::_clampLatitude($LatLngSw->getLat());
+		    $ne = parent::_clampLatitude($LatLngNe->getLat());
 		    $this->_LatBounds = new LatBounds($sw, $ne);
 		    
-		    $sw = $LatLngSw->lng();
-		    $ne = $LatLngNe->lng();
+		    $sw = $LatLngSw->getLng();
+		    $ne = $LatLngNe->getLng();
 		    
 		    if ($ne - $sw >= 360) 
 		    {
@@ -323,8 +323,8 @@ class LatLngBounds extends Spherical
 		    }
 		    else 
 		    {
-		        $sw = parent::_wrapLongitude($LatLngSw->lng());
-		        $ne = parent::_wrapLongitude($LatLngNe->lng());
+		        $sw = parent::_wrapLongitude($LatLngSw->getLng());
+		        $ne = parent::_wrapLongitude($LatLngNe->getLng());
 		        $this->_LngBounds = new LngBounds($sw, $ne);
 		    }
 		} 
@@ -410,14 +410,14 @@ class LatLngBounds extends Spherical
 	
 	public function contains($LatLng)
 	{
-	    return $this->_LatBounds->contains($LatLng->lat()) 
-	        && $this->_LngBounds->contains($LatLng->lng());
+	    return $this->_LatBounds->contains($LatLng->getLat()) 
+	        && $this->_LngBounds->contains($LatLng->getLng());
 	}
 	
 	public function extend($LatLng)
 	{
-	    $this->_LatBounds->extend($LatLng->lat());
-        $this->_LngBounds->extend($LatLng->lng());
+	    $this->_LatBounds->extend($LatLng->getLat());
+        $this->_LngBounds->extend($LatLng->getLng());
         return $this;    
 	}
 }
