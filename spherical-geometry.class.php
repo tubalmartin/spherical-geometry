@@ -1,7 +1,7 @@
 <?php
 
 /*!
- * Spherical Geometry PHP Library v1.0
+ * Spherical Geometry PHP Library v1.1
  * http://tubalmartin.github.com/spherical-geometry-php/
  *
  * Copyright 2012, Túbal Martín
