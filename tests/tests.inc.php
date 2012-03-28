@@ -81,22 +81,22 @@ p($bounds->union($bounds2)->toString());
 
 h2('Spherical geometry static class');
 h3('computeArea(london, donostia, newyork)');
-p(float_to_string(Spherical::computeArea(array($london, $donostia, $newyork))));
+p(float_to_string(SphericalGeometry::computeArea(array($london, $donostia, $newyork))));
 
 h3('computeSignedArea(london, donostia, newyork)');
-p(float_to_string(Spherical::computeSignedArea(array($london, $donostia, $newyork))));
+p(float_to_string(SphericalGeometry::computeSignedArea(array($london, $donostia, $newyork))));
 
 h3('computeDistanceBetween(london, newyork)');
-p(float_to_string(Spherical::computeDistanceBetween($london, $newyork)));
+p(float_to_string(SphericalGeometry::computeDistanceBetween($london, $newyork)));
 
 h3('computeHeading(london, newyork)');
-p(float_to_string(Spherical::computeHeading($london, $newyork)));
+p(float_to_string(SphericalGeometry::computeHeading($london, $newyork)));
 
 h3('computeLength(london, newyork, moscow, sydney)');
-p(float_to_string(Spherical::computeLength(array($london, $newyork, $moscow, $sydney))));
+p(float_to_string(SphericalGeometry::computeLength(array($london, $newyork, $moscow, $sydney))));
 
 h3('computeOffset(london, 5576353.232683, -71.669371)');
-p(Spherical::computeOffset($london, 5576353.232683, -71.669371)->toString());
+p(SphericalGeometry::computeOffset($london, 5576353.232683, -71.669371)->toString());
 
 h3('interpolate(newyork, sydney, 0.7)');
-p(Spherical::interpolate($newyork, $sydney, 0.7)->toString());
+p(SphericalGeometry::interpolate($newyork, $sydney, 0.7)->toString());

@@ -12,25 +12,17 @@
  */
  
 
-/** 
- * Static class Geometry
- * Utility functions for geometry.
- */
-if (!class_exists('Geometry'))
-{
-    class Geometry{}
-} 
 
 /** 
- * Static class Spherical
+ * Static class SphericalGeometry
  * Utility functions for computing geodesic angles, distances and areas.
  */  
-class Spherical extends Geometry
+class SphericalGeometry
 {
     const EQUALS_MARGIN_ERROR = 1.0E-9;
     
-    // Default radius is Earth's radius (at the Ecuator) of 6378137 meters.
-    protected static $earthRadius = 6378137; 
+    // Earth's radius (at the Ecuator) of 6378137 meters.
+    private static $earthRadius = 6378137; 
         
     
     public static function getEarthRadius()
@@ -38,16 +30,38 @@ class Spherical extends Geometry
         return self::$earthRadius;
     }
     
-    public static function setEarthRadius($radius)
+    /**
+     * Computes a bounding rectangle (LatLngBounds instance) from a point and a given radius.
+     * Reference: http://www.movable-type.co.uk/scripts/latlong-db.html
+     *
+     *  -------------NE
+     * |              |
+     * |        radius|
+     * |       o------|
+     * |              |
+     * |              |
+     * SW-------------
+     *
+     * @param object $LatLng
+     * @param int|float $radius (In meters)
+     */
+    public static function computeBounds($LatLng, $radius)
     {
-        $radius = (float) $radius;
+        $latRadiansDistance = $radius / self::$earthRadius;
+        $latDegreesDistance = rad2deg($latRadiansDistance);
+        $lngDegreesDistance = rad2deg($latRadiansDistance / cos(deg2rad($LatLng->getLat())));
+    
+        // SW point
+        $swLat = $LatLng->getLat() - $latDegreesDistance;
+        $swLng = $LatLng->getLng() - $lngDegreesDistance;
+        $sw = new LatLng($swLat, $swLng);
         
-        if (is_nan($radius))
-        {
-            trigger_error('Invalid earth Radius: ('. $radius .')', E_USER_ERROR);
-        }
-        
-        self::$earthRadius = $radius;
+        // NE point
+        $neLat = $LatLng->getLat() + $latDegreesDistance;
+        $neLng = $LatLng->getLng() + $lngDegreesDistance;
+        $ne = new LatLng($neLat, $neLng);
+    
+        return new LatLngBounds($sw, $ne);
     }
     
     public static function computeHeading($fromLatLng, $toLatLng)
@@ -56,7 +70,8 @@ class Spherical extends Geometry
         $toLat = deg2rad($toLatLng->getLat());
         $lng = deg2rad($toLatLng->getLng()) - deg2rad($fromLatLng->getLng());
         
-        return self::_wrapLongitude(rad2deg(atan2(sin($lng) * cos($toLat), cos($fromLat) * sin($toLat) - sin($fromLat) * cos($toLat) * cos($lng))));
+        return self::wrapLongitude(rad2deg(atan2(sin($lng) * cos($toLat), cos($fromLat) 
+            * sin($toLat) - sin($fromLat) * cos($toLat) * cos($lng))));
     }
     
     public static function computeOffset($fromLatLng, $distance, $heading) 
@@ -71,7 +86,8 @@ class Spherical extends Geometry
         $sc = $cosDistance * $sinFromLat + $sinDistance * $cosFromLat * cos($heading);
         
         $lat = rad2deg(asin($sc));
-        $lng = rad2deg(deg2rad($fromLatLng->getLng()) + atan2($sinDistance * $cosFromLat * sin($heading), $cosDistance - $sinFromLat * $sc));
+        $lng = rad2deg(deg2rad($fromLatLng->getLng()) + atan2($sinDistance * $cosFromLat 
+            * sin($heading), $cosDistance - $sinFromLat * $sc));
         
         return new LatLng($lat, $lng);
     }
@@ -141,13 +157,13 @@ class Spherical extends Geometry
     }
     
     // Clamp latitude
-    protected static function _clampLatitude($lat)
+    public static function clampLatitude($lat)
     {
         return min(max($lat, -90), 90); 
     }
     
     // Wrap longitude
-    protected static function _wrapLongitude($lng)
+    public static function wrapLongitude($lng)
     {
         return fmod((fmod(($lng - -180), 360) + 360), 360) + -180;
     }
@@ -162,7 +178,8 @@ class Spherical extends Geometry
         $p1RadLng = deg2rad($LatLng1->getLng());
         $p2RadLat = deg2rad($LatLng2->getLat());
         $p2RadLng = deg2rad($LatLng2->getLng());
-        return 2 * asin(sqrt(pow(sin(($p1RadLat - $p2RadLat) / 2), 2) + cos($p1RadLat) * cos($p2RadLat) * pow(sin(($p1RadLng - $p2RadLng) / 2), 2)));
+        return 2 * asin(sqrt(pow(sin(($p1RadLat - $p2RadLat) / 2), 2) + cos($p1RadLat) 
+            * cos($p2RadLat) * pow(sin(($p1RadLng - $p2RadLng) / 2), 2)));
     }
     
     /**
@@ -226,7 +243,7 @@ class Spherical extends Geometry
 
 
 
-class LatLng extends Spherical
+class LatLng
 {
     protected $_lat;
     protected $_lng;
@@ -243,8 +260,8 @@ class LatLng extends Spherical
         
         if ($noWrap !== true) 
         {
-            $lat = parent::_clampLatitude($lat);
-            $lng = parent::_wrapLongitude($lng);
+            $lat = SphericalGeometry::clampLatitude($lat);
+            $lng = SphericalGeometry::wrapLongitude($lng);
         }
         
         $this->_lat = $lat;
@@ -268,8 +285,8 @@ class LatLng extends Spherical
             return false;
         }
         
-        return abs($this->_lat - $LatLng->getLat()) <= parent::EQUALS_MARGIN_ERROR 
-            && abs($this->_lng - $LatLng->getLng()) <= parent::EQUALS_MARGIN_ERROR;             
+        return abs($this->_lat - $LatLng->getLat()) <= SphericalGeometry::EQUALS_MARGIN_ERROR 
+            && abs($this->_lng - $LatLng->getLng()) <= SphericalGeometry::EQUALS_MARGIN_ERROR;             
     }
     
     public function toString()
@@ -286,7 +303,7 @@ class LatLng extends Spherical
 
 
 
-class LatLngBounds extends Spherical
+class LatLngBounds
 {
     protected $_LatBounds;
     protected $_LngBounds;
@@ -310,8 +327,8 @@ class LatLngBounds extends Spherical
 		
 		if ($LatLngSw)
 		{
-		    $sw = parent::_clampLatitude($LatLngSw->getLat());
-		    $ne = parent::_clampLatitude($LatLngNe->getLat());
+		    $sw = SphericalGeometry::clampLatitude($LatLngSw->getLat());
+		    $ne = SphericalGeometry::clampLatitude($LatLngNe->getLat());
 		    $this->_LatBounds = new LatBounds($sw, $ne);
 		    
 		    $sw = $LatLngSw->getLng();
@@ -323,8 +340,8 @@ class LatLngBounds extends Spherical
 		    }
 		    else 
 		    {
-		        $sw = parent::_wrapLongitude($LatLngSw->getLng());
-		        $ne = parent::_wrapLongitude($LatLngNe->getLng());
+		        $sw = SphericalGeometry::wrapLongitude($LatLngSw->getLng());
+		        $ne = SphericalGeometry::wrapLongitude($LatLngNe->getLng());
 		        $this->_LngBounds = new LngBounds($sw, $ne);
 		    }
 		} 
@@ -371,8 +388,8 @@ class LatLngBounds extends Spherical
 	    $lng = $this->_LngBounds->isEmpty() 
 	        ? 0 
 	        : ($this->_LngBounds->getSw() > $this->_LngBounds->getNe() 
-	        ? 360 - ($this->_LngBounds->getSw() - $this->_LngBounds->getNe())
-	        : $this->_LngBounds->getNe() - $this->_LngBounds->getSw());
+                ? 360 - ($this->_LngBounds->getSw() - $this->_LngBounds->getNe())
+                : $this->_LngBounds->getNe() - $this->_LngBounds->getSw());
 	    
 	    return new LatLng($lat, $lng, true);
 	}
@@ -384,7 +401,8 @@ class LatLngBounds extends Spherical
 	
 	public function toUrlValue($precision = 6)
 	{
-	    return $this->getSouthWest()->toUrlValue($precision) .','. $this->getNorthEast()->toUrlValue($precision);
+	    return $this->getSouthWest()->toUrlValue($precision) .','. 
+	        $this->getNorthEast()->toUrlValue($precision);
 	}
 	
 	public function equals($LatLngBounds)
@@ -426,7 +444,7 @@ class LatLngBounds extends Spherical
 // DO NOT USE THE CLASSES BELOW DIRECTLY
 
 
-class LatBounds extends Spherical
+class LatBounds
 {
     protected $_swLat;
     protected $_neLat;
@@ -468,7 +486,9 @@ class LatBounds extends Spherical
     {
         return $this->isEmpty() 
             ? $LatBounds->isEmpty() 
-            : abs($LatBounds->getSw() - $this->_swLat) + abs($this->_neLat - $LatBounds->getNe()) <= parent::EQUALS_MARGIN_ERROR;
+            : abs($LatBounds->getSw() - $this->_swLat) 
+                + abs($this->_neLat - $LatBounds->getNe()) 
+                <= SphericalGeometry::EQUALS_MARGIN_ERROR;
     }
     
     public function contains($lat)
@@ -495,7 +515,7 @@ class LatBounds extends Spherical
 
 
 
-class LngBounds extends Spherical
+class LngBounds
 {
     protected $_swLng;
     protected $_neLng;
@@ -525,7 +545,7 @@ class LngBounds extends Spherical
         
         if ($this->_swLng > $this->_neLng) 
         {
-            $midPoint = parent::_wrapLongitude($midPoint + 180);
+            $midPoint = SphericalGeometry::wrapLongitude($midPoint + 180);
         }
         
         return $midPoint;
@@ -562,7 +582,9 @@ class LngBounds extends Spherical
     {
         return $this->isEmpty() 
             ? $LngBounds->isEmpty() 
-            : fmod(abs($LngBounds->getSw() - $this->_swLng), 360) + fmod(abs($LngBounds->getNe() - $this->_neLng), 360) <= parent::EQUALS_MARGIN_ERROR;   
+            : fmod(abs($LngBounds->getSw() - $this->_swLng), 360) 
+                + fmod(abs($LngBounds->getNe() - $this->_neLng), 360) 
+                <= SphericalGeometry::EQUALS_MARGIN_ERROR;   
     }
     
     public function contains($lng)
