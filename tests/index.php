@@ -46,7 +46,7 @@ function float_to_string($float, $decimals = 6) {
 	    .col{width:50%;float:left;}
 	    .col .inner{border:1px solid black;padding:20px;}
 	</style>
-	<script src="http://maps.googleapis.com/maps/api/js?v=3.5&sensor=false&libraries=geometry&language=es&region=ES"></script>  
+	<script src="http://maps.googleapis.com/maps/api/js?v=3.9&sensor=false&libraries=geometry&language=es&region=ES"></script>  
 </head>
 <body>
     <div class="doc">
@@ -57,7 +57,7 @@ function float_to_string($float, $decimals = 6) {
             </div>
         </div>
         <div class="col">
-            <h1>Google Maps JS API v3.5 TESTS</h1>
+            <h1>Google Maps JS API v3.9 TESTS</h1>
             <div class="inner" id="jsresults">
                 <script>
                     // A streaming API for the innerHTML property
