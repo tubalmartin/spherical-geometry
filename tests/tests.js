@@ -74,6 +74,32 @@ p(bounds.intersects(bounds2));
 h3("union(sydney, newyork)");
 p(bounds.union(bounds2));
 
+h2("LatLngBounds class: maximum bounds in GMaps");
+bounds3 = new google.maps.LatLngBounds(
+    new google.maps.LatLng(-85.051128779807, -180),
+    new google.maps.LatLng(85.051128779807, 180)
+);
+h3("Constructor (new google.maps.LatLng(-85.051128779807, -180), new google.maps.LatLng(85.051128779807, 180))")
+p(bounds3);
+
+h3("getCenter()");
+p(bounds3.getCenter());
+
+h3("getSouthWest()");
+p(bounds3.getSouthWest());
+
+h3("getNorthEast()");
+p(bounds3.getNorthEast());
+
+h3("contains(moscow)");
+p(bounds3.contains(moscow));
+
+h3("contains(sydney)");
+p(bounds3.contains(sydney));
+
+h3("contains(buenosaires)");
+p(bounds3.contains(buenosaires));
+
 h2("google.maps.geometry.spherical library");
 h3("computeArea(london, donostia, newyork)");
 p(spherical.computeArea([london, donostia, newyork]));

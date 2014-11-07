@@ -1,5 +1,5 @@
-<?php 
-                
+<?php
+
 h2('LatLng class');
 h3('Constructor');
 // Create LatLng objects
@@ -26,7 +26,7 @@ h3('Constructor (buenosaires, moscow)');
  
 $bounds  = new LatLngBounds($buenosaires, $moscow);
 $bounds2 = new LatLngBounds($sydney, $newyork); 
-p($bounds->toString()); 
+p($bounds->toString());
 
 
 h3('getCenter()');
@@ -78,6 +78,33 @@ p($bounds->intersects($bounds2));
 
 h3('union(sydney, newyork)');
 p($bounds->union($bounds2)->toString());
+
+h2("LatLngBounds class: maximum bounds in GMaps");
+$bounds3 = new LatLngBounds(
+    new LatLng(-85.051128779807, -180),
+    new LatLng(85.051128779807, 180)
+);
+
+h3("Constructor (new LatLng(-85.051128779807, -180), new LatLng(85.051128779807, 180))");
+p($bounds3->toString());
+
+h3("getCenter()");
+p($bounds3->getCenter()->toString());
+
+h3("getSouthWest()");
+p($bounds3->getSouthWest()->toString());
+
+h3("getNorthEast()");
+p($bounds3->getNorthEast()->toString());
+
+h3('contains(moscow)');
+p($bounds3->contains($moscow));
+
+h3('contains(sydney)');
+p($bounds3->contains($sydney));
+
+h3('contains(buenosaires)');
+p($bounds3->contains($buenosaires));
 
 h2('Spherical geometry static class');
 h3('computeArea(london, donostia, newyork)');

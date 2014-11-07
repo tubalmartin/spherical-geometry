@@ -1,7 +1,7 @@
 <?php
 
 /*!
- * Spherical Geometry PHP Library v1.1
+ * Spherical Geometry PHP Library v1.1.1
  * http://tubalmartin.github.com/spherical-geometry-php/
  *
  * Copyright 2012, Túbal Martín
@@ -164,7 +164,7 @@ class SphericalGeometry
     // Wrap longitude
     public static function wrapLongitude($lng)
     {
-        return fmod((fmod(($lng - -180), 360) + 360), 360) + -180;
+        return $lng === (float) 180 ? $lng : fmod((fmod(($lng - -180), 360) + 360), 360) + -180;
     }
     
     /**
@@ -257,7 +257,7 @@ class LatLng
             trigger_error('LatLng class -> Invalid float numbers: ('. $lat .', '. $lng .')', E_USER_ERROR);
         }
         
-        if ($noWrap !== true) 
+        if ($noWrap === false)
         {
             $lat = SphericalGeometry::clampLatitude($lat);
             $lng = SphericalGeometry::wrapLongitude($lng);
@@ -319,13 +319,9 @@ class LatLngBounds
             trigger_error('LatLngBounds class -> Invalid LatLng object.', E_USER_ERROR);
         }
         
-        if ($LatLngSw && !$LatLngNe) 
-        {
-            $LatLngNe = $LatLngSw;
-        }
-        
         if ($LatLngSw)
         {
+            $LatLngNe = !$LatLngNe ? $LatLngSw : $LatLngNe;
             $sw = SphericalGeometry::clampLatitude($LatLngSw->getLat());
             $ne = SphericalGeometry::clampLatitude($LatLngNe->getLat());
             $this->_LatBounds = new LatBounds($sw, $ne);
@@ -333,14 +329,14 @@ class LatLngBounds
             $sw = $LatLngSw->getLng();
             $ne = $LatLngNe->getLng();
             
-            if ($ne - $sw >= 360) 
+            if (360 <= $ne - $sw)
             {
                 $this->_LngBounds = new LngBounds(-180, 180);
             }
             else 
             {
-                $sw = SphericalGeometry::wrapLongitude($LatLngSw->getLng());
-                $ne = SphericalGeometry::wrapLongitude($LatLngNe->getLng());
+                $sw = SphericalGeometry::wrapLongitude($sw);
+                $ne = SphericalGeometry::wrapLongitude($ne);
                 $this->_LngBounds = new LngBounds($sw, $ne);
             }
         } 
