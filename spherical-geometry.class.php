@@ -164,7 +164,7 @@ class SphericalGeometry
     // Wrap longitude
     public static function wrapLongitude($lng)
     {
-        return $lng === (float) 180 ? $lng : fmod((fmod(($lng - -180), 360) + 360), 360) + -180;
+        return $lng == 180 ? $lng : fmod((fmod(($lng - -180), 360) + 360), 360) + -180;
     }
     
     /**
